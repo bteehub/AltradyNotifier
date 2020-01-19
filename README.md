@@ -16,6 +16,12 @@ A pushover notifier for Altrady Quick Scan functionality.
      * The ApplicationToken can now be found on the top of the website below the text *API Token/Key*
  * Please be aware that Pushover applications are limited to 7500 messages per month each
 
+**Microsoft .NET Core**
+
+In order to use the releases from Github you will need download and install [Microsoft .NET Core Runtime 3.1.x](https://dotnet.microsoft.com/download/dotnet-core/3.1) for your operating system. 
+
+Github limits releases to 10MB and a self contained release is around 25-30MB.
+
 ## Compile on your own
 By using [Microsoft .NET Core 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1) SDK
 
