@@ -1,0 +1,66 @@
+﻿{
+  "CultureInfo": "en-UK",
+  "MaxPrecision": "8",
+  "Altrady": {
+    "ApiKey": "<from your Altrady API account>",
+    "MaxApiCallsPerHour": "1000"
+  },
+  "Pushover": {
+    "UserToken": "<from your Pushover account>",
+    "ApplicationToken": "<from your Pushover account application>"
+  },
+  "Filter": [
+    {
+      "Timeframe": "15",
+      "ExcludedMarkets": "DOGE/BTC",
+      "ExchangeMarket": [
+        {
+          "Exchange": "BINA",
+          "Market": "/BTC",
+          "Volume": {
+            "Currency": "USD",
+            "Value": "500"
+          },
+          "Rise": "2",
+          "Drop": "-2"
+        },
+        {
+          "Exchange": "BTRX",
+          "Market": "/BTC",
+          "Volume": {
+            "Currency": "USD",
+            "Value": "500"
+          },
+          "Rise": "2",
+          "Drop": "-2"
+        }        
+      ]
+    },
+    {
+      "Timeframe": "30",
+      "ExcludedMarkets": "",
+      "ExchangeMarket": [
+        {
+          "Exchange": "BINA",
+          "Market": "/BTC",
+          "Volume": {
+            "Currency": "USD",
+            "Value": "10000"
+          },
+          "Rise": "5",
+          "Drop": "-5"
+        },
+        {
+          "Exchange": "BTRX",
+          "Market": "/BTC",
+          "Volume": {
+            "Currency": "USD",
+            "Value": "10000"
+          },
+          "Rise": "5",
+          "Drop": "-5"
+        }
+      ]
+    }
+  ]
+}
