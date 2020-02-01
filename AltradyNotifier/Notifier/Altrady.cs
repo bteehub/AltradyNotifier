@@ -65,7 +65,7 @@ namespace AltradyNotifier.Notifier
                             pushoverMessage.message += $"\r\nVolume: $ {item.usdVolume.Format(_cultureInfo, 0)} | ₿ {item.btcVolume.Format(_cultureInfo, 2)}";
 
                             Log.Debug($"Sending notification | Title: {pushoverMessage.title} | Message: {pushoverMessage.message}");
-                            _pushover.SendMessage(pushoverMessage);
+                            await _pushover.SendMessageAsync(pushoverMessage);
                         }
                     }
 
