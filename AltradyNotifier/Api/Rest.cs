@@ -85,7 +85,7 @@ namespace AltradyNotifier.Api
                 // Send Request
                 using var client = new HttpClient();
 
-                var response = await client.SendAsync(request);
+                var response = await client.SendAsync(request, _token);
                 if (response.IsSuccessStatusCode)
                 {
                     _fallBackMultiplier = 1;
@@ -95,7 +95,7 @@ namespace AltradyNotifier.Api
                 {
                     Log.Debug($"Response successful: {response.IsSuccessStatusCode}, status code: {response.StatusCode}, reason: {response.ReasonPhrase}");
 
-                    if (response.StatusCode == HttpStatusCode.TooManyRequests)
+                    if (response.StatusCode == HttpStatusCode.TooManyRequests || response.StatusCode == HttpStatusCode.RequestTimeout || response.StatusCode == HttpStatusCode.GatewayTimeout)
                         _fallBackMultiplier *= 2;
                 }
             }
@@ -115,9 +115,7 @@ namespace AltradyNotifier.Api
             var apiDelay = (int)(1 / maxApiCallsPerMilliSecond);
             apiDelay += new Random().Next(251, 499); // Add some additional delay
 
-            _fallBackMultiplier = _fallBackMultiplier < (int.MaxValue / apiDelay)
-                ? _fallBackMultiplier
-                : int.MaxValue / apiDelay;
+            _fallBackMultiplier = Math.Min(_fallBackMultiplier, int.MaxValue / apiDelay);
 
             await Task.Delay(_fallBackMultiplier * apiDelay, _token);
         }
