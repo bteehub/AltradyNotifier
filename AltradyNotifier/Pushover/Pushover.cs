@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Specialized;
 using System.Net;
 
@@ -15,8 +15,8 @@ namespace AltradyNotifier
         {
             _baseUrl = "https://api.pushover.net/1/messages.json";
 
-            _user = user;
-            _token = token;
+            _user = user.Trim();
+            _token = token.Trim();
         }
 
         public void SendMessage((string title, string message) titleMessage) => SendMessage(titleMessage.title, titleMessage.message);
