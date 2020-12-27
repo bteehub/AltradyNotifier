@@ -140,10 +140,7 @@ namespace AltradyNotifier.Notifier
                     if (currentQuickScan.ContainsKey(timeframe))
                         items.AddRange(currentQuickScan[timeframe]);
 
-                    results.Add(
-                        timeframe,
-                        items.GroupBy(x => x.Id).ToDictionary(k => k.Key, v => v.OrderByDescending(_ => _.MarketPrices.Max(_ => _.Time)).First()).Select(x => x.Value).ToList()
-                        );
+                    results.Add(timeframe, GetDistinctQuickScanMarkets(items));
                 }
                 else if (currentQuickScan.ContainsKey(timeframe))
                 {

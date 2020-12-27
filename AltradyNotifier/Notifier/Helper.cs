@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace AltradyNotifier.Notifier
@@ -29,6 +29,15 @@ namespace AltradyNotifier.Notifier
             }
 
             return precision;
+        }
+
+        private static List<Entities.Altrady.QuickScanEndpoint.Market> GetDistinctQuickScanMarkets(List<Entities.Altrady.QuickScanEndpoint.Market> markets)
+        {
+            return markets
+                .GroupBy(x => x.Id)
+                .ToDictionary(k => k.Key, v => v.OrderByDescending(_ => _.MarketPrices.Max(_ => _.Time)).First())
+                .Select(x => x.Value)
+                .ToList();
         }
     }
 }
