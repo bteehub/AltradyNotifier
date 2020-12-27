@@ -33,6 +33,7 @@ namespace AltradyNotifier.Api
             catch (Exception ex)
             {
                 Log.Error(ex);
+                Log.Debug($"{nameof(result)}: {result}");
             }
 
             return null;
