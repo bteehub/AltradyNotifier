@@ -7,7 +7,7 @@ namespace AltradyNotifier
 {
     public class Program
     {
-        private static Pushover _pushover = null;
+        private static Pushover.Pushover _pushover = null;
 
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
@@ -17,10 +17,10 @@ namespace AltradyNotifier
 
             Log.Debug($"Started");
 
-            var jsonConfig = JsonConvert.DeserializeObject<Classes.Configuration.Global>(System.IO.File.ReadAllText($"{nameof(AltradyNotifier)}.json"));
+            var jsonConfig = JsonConvert.DeserializeObject<Entities.Configuration.Global>(System.IO.File.ReadAllText($"{nameof(AltradyNotifier)}.json"));
 
-            _pushover = new Pushover(jsonConfig.Pushover.UserToken, jsonConfig.Pushover.ApplicationToken);
-            _pushover.SendMessage($"Status @ {DateTime.Now:HH:mm}", "Program started");
+            _pushover = new Pushover.Pushover(jsonConfig.Pushover.UserToken, jsonConfig.Pushover.ApplicationToken);
+            await _pushover.SendMessageAsync($"Status @ {DateTime.Now:HH:mm}", "Program started");
 
             var cancellationToken = new CancellationTokenSource();
             var t = Task.Run(async () =>
@@ -34,7 +34,7 @@ namespace AltradyNotifier
                 catch (Exception ex)
                 {
                     Log.Fatal(ex);
-                    _pushover.SendMessage($"Exception occured @ {DateTime.Now:HH:mm}", $"{nameof(AltradyNotifier)} crashed: {ex.Message}");
+                    await _pushover.SendMessageAsync($"Exception occured @ {DateTime.Now:HH:mm}", $"{nameof(AltradyNotifier)} crashed: {ex.Message}");
                 }
             }, cancellationToken.Token);
 
@@ -44,7 +44,7 @@ namespace AltradyNotifier
             cancellationToken.Cancel();
             await Task.WhenAll(t);
 
-            _pushover.SendMessage($"Status @ {DateTime.Now:HH:mm}", "Program stopped");
+            await _pushover.SendMessageAsync($"Status @ {DateTime.Now:HH:mm}", "Program stopped");
             Log.Debug($"Stopped");
         }
 
@@ -56,7 +56,7 @@ namespace AltradyNotifier
             Log.Fatal((Exception)e.ExceptionObject);
 
             if (_pushover != null)
-                _pushover.SendMessage($"Exception occured @ {DateTime.Now:HH:mm}", $"{nameof(AltradyNotifier)} crashed, an unhandled exception occured");
+                _ = _pushover.SendMessageAsync($"Exception occured @ {DateTime.Now:HH:mm}", $"{nameof(AltradyNotifier)} crashed, an unhandled exception occured");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -11,12 +12,12 @@ namespace AltradyNotifier.Api
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         
-        private readonly Classes.Configuration.Global _config;
+        private readonly Entities.Configuration.Global _config;
         private readonly CancellationToken _token;
 
         private int _fallBackMultiplier;
         
-        public Rest(Classes.Configuration.Global config, CancellationToken token)
+        public Rest(Entities.Configuration.Global config, CancellationToken token)
         {
             _config = config;
             _token = token;
@@ -40,10 +41,11 @@ namespace AltradyNotifier.Api
         {
             string endpoint = "/markets";
 
-            var param = new List<(string, string)>();
-
-            param.Add(("algorithm", algorithm));
-            param.Add(("exchange_code", exchangeCode));
+            var param = new List<(string, string)>
+            {
+                ("algorithm", algorithm),
+                ("exchange_code", exchangeCode)
+            };
 
             return await GetDataAsync(endpoint, param);
         }
@@ -52,9 +54,10 @@ namespace AltradyNotifier.Api
         {
             string endpoint = "/markets/quick_scan";
 
-            var param = new List<(string, string)>();
-
-            param.Add(("timeframe", timeframe));
+            var param = new List<(string, string)>
+            {
+                ("timeframe", timeframe)
+            };
 
             return await GetDataAsync(endpoint, param);
         }
@@ -69,11 +72,9 @@ namespace AltradyNotifier.Api
 
                 // Create URL
                 string requestUri = $"{apiUrl}{endpoint}?api_key={_config.Altrady.ApiKey}";
-                if (param != null)
-                {
-                    foreach (var (key, value) in param)
-                        requestUri += $"&{key}={value}";
-                }
+
+                if (param != null)                
+                    requestUri += string.Join('&', param.Select(x => $"{x.key}={x.value}"));
 
                 // Create request with headers
                 var request = new HttpRequestMessage
@@ -83,21 +84,20 @@ namespace AltradyNotifier.Api
                 };
 
                 // Send Request
-                using (var client = new HttpClient())
-                {
-                    var response = await client.SendAsync(request);
-                    if (response.IsSuccessStatusCode)
-                    {
-                        _fallBackMultiplier = 1;
-                        return await response.Content.ReadAsStringAsync();
-                    }
-                    else
-                    {
-                        Log.Debug($"Response successful: {response.IsSuccessStatusCode}, status code: {response.StatusCode}, reason: {response.ReasonPhrase}");
+                using var client = new HttpClient();
 
-                        if (response.StatusCode == HttpStatusCode.TooManyRequests)
-                            _fallBackMultiplier *= 2;              
-                    }
+                var response = await client.SendAsync(request, _token);
+                if (response.IsSuccessStatusCode)
+                {
+                    _fallBackMultiplier = 1;
+                    return await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    Log.Debug($"Response successful: {response.IsSuccessStatusCode}, status code: {response.StatusCode}, reason: {response.ReasonPhrase}");
+
+                    if (response.StatusCode == HttpStatusCode.TooManyRequests || response.StatusCode == HttpStatusCode.RequestTimeout || response.StatusCode == HttpStatusCode.GatewayTimeout)
+                        _fallBackMultiplier *= 2;
                 }
             }
             catch (TaskCanceledException) { throw; }
@@ -111,14 +111,12 @@ namespace AltradyNotifier.Api
 
         private async Task DelayApiCall()
         {
-            double maxApiCallsPerMilliSecond = (double)_config.Altrady.MaxApiCallsPerHour / 60 / 60 / 1000;
+            double maxApiCallsPerMilliSecond = _config.Altrady.MaxApiCallsPerHour / 60d / 60d / 1000d;
 
-            var apiDelay = (int)(1 / maxApiCallsPerMilliSecond);
+            int apiDelay = (int)(1d / maxApiCallsPerMilliSecond);
             apiDelay += new Random().Next(251, 499); // Add some additional delay
 
-            _fallBackMultiplier = _fallBackMultiplier < (int.MaxValue / apiDelay)
-                ? _fallBackMultiplier
-                : int.MaxValue / apiDelay;
+            _fallBackMultiplier = Math.Min(_fallBackMultiplier, int.MaxValue / apiDelay); // prevent int overflow on next line
 
             await Task.Delay(_fallBackMultiplier * apiDelay, _token);
         }

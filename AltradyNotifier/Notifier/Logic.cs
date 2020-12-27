@@ -9,7 +9,7 @@ namespace AltradyNotifier.Notifier
         /// <summary>
         /// Apply filter and clean up history
         /// </summary>
-        private Dictionary<int, List<Classes.Altrady.QuickScanEndpoint.Market>> FilterQuickScan(Dictionary<int, List<Classes.Altrady.QuickScanEndpoint.Market>> quickScan)
+        private Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>> FilterQuickScan(Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>> quickScan)
         {
             foreach (var timeframe in quickScan.Keys.ToList())
             {
@@ -20,15 +20,15 @@ namespace AltradyNotifier.Notifier
                     continue;
 
                 // Clean up history
-                quickScan[timeframe] = quickScan[timeframe].Where(x => x.marketPrices.Max(_ => _.time) > DateTime.UtcNow.AddMinutes(-timeframe)).ToList();
+                quickScan[timeframe] = quickScan[timeframe].Where(x => x.MarketPrices.Max(_ => _.Time) > DateTime.UtcNow.AddMinutes(-timeframe)).ToList();
 
                 // Exclude markets
                 foreach ((string baseCurrency, string quoteCurrency) in ParseMarketString(filter.ExcludedMarkets))
                 {
                     if (string.IsNullOrEmpty(baseCurrency)) // Remove f.e. /BTC
-                        quickScan[timeframe] = quickScan[timeframe].Where(x => !string.Equals(x.quoteCurrency, quoteCurrency, StringComparison.OrdinalIgnoreCase)).ToList();
+                        quickScan[timeframe] = quickScan[timeframe].Where(x => !string.Equals(x.QuoteCurrency, quoteCurrency, StringComparison.OrdinalIgnoreCase)).ToList();
                     else // Remove f.e. LTC/BTC
-                        quickScan[timeframe] = quickScan[timeframe].Where(x => !(string.Equals(x.baseCurrency, baseCurrency, StringComparison.OrdinalIgnoreCase) && string.Equals(x.quoteCurrency, quoteCurrency, StringComparison.OrdinalIgnoreCase))).ToList();
+                        quickScan[timeframe] = quickScan[timeframe].Where(x => !(string.Equals(x.BaseCurrency, baseCurrency, StringComparison.OrdinalIgnoreCase) && string.Equals(x.QuoteCurrency, quoteCurrency, StringComparison.OrdinalIgnoreCase))).ToList();
                 }
 
                 // Filter items
@@ -41,16 +41,16 @@ namespace AltradyNotifier.Notifier
         /// <summary>
         /// Apply market filter
         /// </summary>
-        private static List<Classes.Altrady.QuickScanEndpoint.Market> ApplyMarketFilter(List<Classes.Altrady.QuickScanEndpoint.Market> quickScan, Classes.Configuration.Filter filter)
+        private static List<Entities.Altrady.QuickScanEndpoint.Market> ApplyMarketFilter(List<Entities.Altrady.QuickScanEndpoint.Market> quickScan, Entities.Configuration.Filter filter)
         {
             if (filter.ExchangeMarket == default)
                 return quickScan;
 
-            var results = new List<Classes.Altrady.QuickScanEndpoint.Market>();
+            var results = new List<Entities.Altrady.QuickScanEndpoint.Market>();
 
             foreach (var market in filter.ExchangeMarket)
             {
-                var filteredMarket = new List<Classes.Altrady.QuickScanEndpoint.Market>();
+                var filteredMarket = new List<Entities.Altrady.QuickScanEndpoint.Market>();
 
                 // Market
                 if (ParseMarketString(market.Market).Any())
@@ -58,9 +58,9 @@ namespace AltradyNotifier.Notifier
                     foreach ((string baseCurrency, string quoteCurrency) in ParseMarketString(market.Market))
                     {
                         if (string.IsNullOrEmpty(baseCurrency)) // Add f.e. /BTC
-                            filteredMarket.AddRange(quickScan.Where(x => string.Equals(x.quoteCurrency, quoteCurrency, StringComparison.OrdinalIgnoreCase)).ToList());
+                            filteredMarket.AddRange(quickScan.Where(x => string.Equals(x.QuoteCurrency, quoteCurrency, StringComparison.OrdinalIgnoreCase)).ToList());
                         else // Add f.e. LTC/BTC
-                            filteredMarket.AddRange(quickScan.Where(x => string.Equals(x.baseCurrency, baseCurrency, StringComparison.OrdinalIgnoreCase) && string.Equals(x.quoteCurrency, quoteCurrency, StringComparison.OrdinalIgnoreCase)).ToList());
+                            filteredMarket.AddRange(quickScan.Where(x => string.Equals(x.BaseCurrency, baseCurrency, StringComparison.OrdinalIgnoreCase) && string.Equals(x.QuoteCurrency, quoteCurrency, StringComparison.OrdinalIgnoreCase)).ToList());
                     }
                 }
                 else
@@ -69,7 +69,7 @@ namespace AltradyNotifier.Notifier
                 }
 
                 // Exchange
-                filteredMarket = filteredMarket.Where(x => string.Equals(market.Exchange, x.exchangeCode, StringComparison.OrdinalIgnoreCase)).ToList();
+                filteredMarket = filteredMarket.Where(x => string.Equals(market.Exchange, x.ExchangeCode, StringComparison.OrdinalIgnoreCase)).ToList();
 
                 // Volume
                 if (market.Volume != default)
@@ -77,17 +77,17 @@ namespace AltradyNotifier.Notifier
                     switch (market.Volume.Currency)
                     {
                         case "USD":
-                            filteredMarket = filteredMarket.Where(x => x.usdVolume > market.Volume.Value).ToList();
+                            filteredMarket = filteredMarket.Where(x => x.UsdVolume > market.Volume.Value).ToList();
                             break;
                         case "BTC":
-                            filteredMarket = filteredMarket.Where(x => x.btcVolume > market.Volume.Value).ToList();
+                            filteredMarket = filteredMarket.Where(x => x.BtcVolume > market.Volume.Value).ToList();
                             break;
                         default: break;
                     }
                 }
 
                 // Rise or drop
-                filteredMarket = filteredMarket.Where(x => x.rise >= market.Rise || x.drop <= market.Drop).ToList();
+                filteredMarket = filteredMarket.Where(x => x.Rise >= market.Rise || x.Drop <= market.Drop).ToList();
 
                 // Add to results
                 results.AddRange(filteredMarket);
@@ -99,19 +99,25 @@ namespace AltradyNotifier.Notifier
         /// <summary>
         /// Get new quick scan items
         /// </summary>
-        private static Dictionary<int, List<Classes.Altrady.QuickScanEndpoint.Market>> GetNewQuickScan(Dictionary<int, List<Classes.Altrady.QuickScanEndpoint.Market>> previousQuickScan, Dictionary<int, List<Classes.Altrady.QuickScanEndpoint.Market>> currentQuickScan)
+        private static Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>> GetNewQuickScan(Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>> previousQuickScan, Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>> currentQuickScan)
         {
-            var results = new Dictionary<int, List<Classes.Altrady.QuickScanEndpoint.Market>>();
+            var results = new Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>>();
 
             foreach (var timeframe in previousQuickScan.Keys.Concat(currentQuickScan.Keys).Distinct())
             {
                 if (previousQuickScan.ContainsKey(timeframe) && currentQuickScan.ContainsKey(timeframe))
                 {
-                    results.Add(timeframe, currentQuickScan[timeframe].Except(previousQuickScan[timeframe], new Classes.Altrady.QuickScanEndpoint.MarketCompare()).ToList());
+                    var newItems = currentQuickScan[timeframe]
+                        .Except(previousQuickScan[timeframe], new Entities.Altrady.QuickScanEndpoint.MarketCompare())
+                        .ToList();
+
+                    results.Add(timeframe, newItems);
                 }
                 else if (currentQuickScan.ContainsKey(timeframe))
                 {
-                    results.Add(timeframe, currentQuickScan[timeframe]);
+                    var newItems = currentQuickScan[timeframe];
+
+                    results.Add(timeframe, newItems);
                 }
             }
 
@@ -121,24 +127,20 @@ namespace AltradyNotifier.Notifier
         /// <summary>
         /// Merge two quick scan lists to have a proper history list.
         /// </summary>
-        /// <returns></returns>
-        private static Dictionary<int, List<Classes.Altrady.QuickScanEndpoint.Market>> PopulateQuickScan(Dictionary<int, List<Classes.Altrady.QuickScanEndpoint.Market>> previousQuickScan, Dictionary<int, List<Classes.Altrady.QuickScanEndpoint.Market>> currentQuickScan)
+        private static Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>> PopulateQuickScan(Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>> previousQuickScan, Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>> currentQuickScan)
         {
-            var results = new Dictionary<int, List<Classes.Altrady.QuickScanEndpoint.Market>>();
+            var results = new Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>>();
 
             foreach (var timeframe in previousQuickScan.Keys.Concat(currentQuickScan.Keys).Distinct())
             {
                 if (previousQuickScan.ContainsKey(timeframe))
                 {
-                    var items = new List<Classes.Altrady.QuickScanEndpoint.Market>(previousQuickScan[timeframe]);
+                    var items = new List<Entities.Altrady.QuickScanEndpoint.Market>(previousQuickScan[timeframe]);
 
                     if (currentQuickScan.ContainsKey(timeframe))
                         items.AddRange(currentQuickScan[timeframe]);
 
-                    results.Add(
-                        timeframe,
-                        items.GroupBy(x => x.id).ToDictionary(k => k.Key, v => v.OrderByDescending(_ => _.marketPrices.Max(_ => _.time)).First()).Select(x => x.Value).ToList()
-                        );
+                    results.Add(timeframe, GetDistinctQuickScanMarkets(items));
                 }
                 else if (currentQuickScan.ContainsKey(timeframe))
                 {
