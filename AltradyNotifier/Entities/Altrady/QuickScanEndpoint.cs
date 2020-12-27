@@ -9,44 +9,89 @@ namespace AltradyNotifier.Entities.Altrady
     {
         public class Response
         {
-            public List<Market> markets;
+            [JsonProperty("markets")]
+            public List<Market> Markets { get; set; }
         }
 
         public class Market
         {
-            public int id;
-            public string baseCurrency;
-            public string quoteCurrency;
+            [JsonProperty("id")]
+            public int Id { get; set; }
 
-            public string exchangeName;
-            public string exchangeCode;
-            public string exchangeLogo;
+            [JsonProperty("baseCurrency")]
+            public string BaseCurrency { get; set; }
 
-            public string longName;
-            public string symbol;
+            [JsonProperty("quoteCurrency")]
+            public string QuoteCurrency { get; set; }
 
-            public decimal volume;
-            public decimal quoteVolume;
-            public decimal btcVolume;
-            public decimal usdVolume;
 
-            public decimal lastPrice;
-            public decimal highPrice;
-            public decimal lowPrice;
-            public decimal bidPrice;
-            public decimal askPrice;
-            public decimal? rise;
-            public decimal? drop;
-            public bool fatFinger;
+            [JsonProperty("exchangeName")]
+            public string ExchangeName { get; set; }
 
-            public List<MarketPrice> marketPrices;
+            [JsonProperty("exchangeCode")]
+            public string ExchangeCode { get; set; }
+
+            [JsonProperty("exchangeLogo")]
+            public string ExchangeLogo { get; set; }
+
+            
+            [JsonProperty("longName")]
+            public string LongName { get; set; }
+
+            [JsonProperty("symbol")]
+            public string Symbol { get; set; }
+
+
+            [JsonProperty("volume")]
+            public decimal Volume { get; set; }
+
+            [JsonProperty("quoteVolume")]
+            public decimal QuoteVolume { get; set; }
+
+            [JsonProperty("btcVolume")]
+            public decimal BtcVolume { get; set; }
+
+            [JsonProperty("usdVolume")]
+            public decimal UsdVolume { get; set; }
+
+
+            [JsonProperty("lastPrice")]
+            public decimal LastPrice { get; set; }
+
+            [JsonProperty("highPrice")]
+            public decimal HighPrice { get; set; }
+
+            [JsonProperty("lowPrice")]
+            public decimal LowPrice { get; set; }
+
+            [JsonProperty("bidPrice")]
+            public decimal BidPrice { get; set; }
+
+            [JsonProperty("askPrice")]
+            public decimal AskPrice { get; set; }
+
+            [JsonProperty("rise")]
+            public decimal? Rise { get; set; }
+
+            [JsonProperty("drop")]
+            public decimal? Drop { get; set; }
+
+            [JsonProperty("fatFinger")]
+            public bool FatFinger { get; set; }
+
+
+            [JsonProperty("marketPrices")]
+            public List<MarketPrice> MarketPrices { get; set; }
         }
 
         public class MarketPrice
         {
-            public decimal price;
+            [JsonProperty("price")]
+            public decimal Price { get; set; }
+
+            [JsonProperty("time")]
             [JsonConverter(typeof(UnixDateTimeConverter))]
-            public DateTime time;
+            public DateTime Time { get; set; }
         }
 
         public class MarketCompare : IEqualityComparer<Market>
@@ -59,7 +104,7 @@ namespace AltradyNotifier.Entities.Altrady
                 if (x == null || y == null)
                     return false;
 
-                if (x.id == y.id)
+                if (x.Id == y.Id)
                     return true;
 
                 return false;
@@ -67,7 +112,7 @@ namespace AltradyNotifier.Entities.Altrady
 
             public int GetHashCode(Market obj)
             {
-                return HashCode.Combine(obj.id);
+                return HashCode.Combine(obj.Id);
             }
         }
     }

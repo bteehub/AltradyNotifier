@@ -20,15 +20,15 @@ namespace AltradyNotifier.Notifier
                     continue;
 
                 // Clean up history
-                quickScan[timeframe] = quickScan[timeframe].Where(x => x.marketPrices.Max(_ => _.time) > DateTime.UtcNow.AddMinutes(-timeframe)).ToList();
+                quickScan[timeframe] = quickScan[timeframe].Where(x => x.MarketPrices.Max(_ => _.Time) > DateTime.UtcNow.AddMinutes(-timeframe)).ToList();
 
                 // Exclude markets
                 foreach ((string baseCurrency, string quoteCurrency) in ParseMarketString(filter.ExcludedMarkets))
                 {
                     if (string.IsNullOrEmpty(baseCurrency)) // Remove f.e. /BTC
-                        quickScan[timeframe] = quickScan[timeframe].Where(x => !string.Equals(x.quoteCurrency, quoteCurrency, StringComparison.OrdinalIgnoreCase)).ToList();
+                        quickScan[timeframe] = quickScan[timeframe].Where(x => !string.Equals(x.QuoteCurrency, quoteCurrency, StringComparison.OrdinalIgnoreCase)).ToList();
                     else // Remove f.e. LTC/BTC
-                        quickScan[timeframe] = quickScan[timeframe].Where(x => !(string.Equals(x.baseCurrency, baseCurrency, StringComparison.OrdinalIgnoreCase) && string.Equals(x.quoteCurrency, quoteCurrency, StringComparison.OrdinalIgnoreCase))).ToList();
+                        quickScan[timeframe] = quickScan[timeframe].Where(x => !(string.Equals(x.BaseCurrency, baseCurrency, StringComparison.OrdinalIgnoreCase) && string.Equals(x.QuoteCurrency, quoteCurrency, StringComparison.OrdinalIgnoreCase))).ToList();
                 }
 
                 // Filter items
@@ -58,9 +58,9 @@ namespace AltradyNotifier.Notifier
                     foreach ((string baseCurrency, string quoteCurrency) in ParseMarketString(market.Market))
                     {
                         if (string.IsNullOrEmpty(baseCurrency)) // Add f.e. /BTC
-                            filteredMarket.AddRange(quickScan.Where(x => string.Equals(x.quoteCurrency, quoteCurrency, StringComparison.OrdinalIgnoreCase)).ToList());
+                            filteredMarket.AddRange(quickScan.Where(x => string.Equals(x.QuoteCurrency, quoteCurrency, StringComparison.OrdinalIgnoreCase)).ToList());
                         else // Add f.e. LTC/BTC
-                            filteredMarket.AddRange(quickScan.Where(x => string.Equals(x.baseCurrency, baseCurrency, StringComparison.OrdinalIgnoreCase) && string.Equals(x.quoteCurrency, quoteCurrency, StringComparison.OrdinalIgnoreCase)).ToList());
+                            filteredMarket.AddRange(quickScan.Where(x => string.Equals(x.BaseCurrency, baseCurrency, StringComparison.OrdinalIgnoreCase) && string.Equals(x.QuoteCurrency, quoteCurrency, StringComparison.OrdinalIgnoreCase)).ToList());
                     }
                 }
                 else
@@ -69,7 +69,7 @@ namespace AltradyNotifier.Notifier
                 }
 
                 // Exchange
-                filteredMarket = filteredMarket.Where(x => string.Equals(market.Exchange, x.exchangeCode, StringComparison.OrdinalIgnoreCase)).ToList();
+                filteredMarket = filteredMarket.Where(x => string.Equals(market.Exchange, x.ExchangeCode, StringComparison.OrdinalIgnoreCase)).ToList();
 
                 // Volume
                 if (market.Volume != default)
@@ -77,17 +77,17 @@ namespace AltradyNotifier.Notifier
                     switch (market.Volume.Currency)
                     {
                         case "USD":
-                            filteredMarket = filteredMarket.Where(x => x.usdVolume > market.Volume.Value).ToList();
+                            filteredMarket = filteredMarket.Where(x => x.UsdVolume > market.Volume.Value).ToList();
                             break;
                         case "BTC":
-                            filteredMarket = filteredMarket.Where(x => x.btcVolume > market.Volume.Value).ToList();
+                            filteredMarket = filteredMarket.Where(x => x.BtcVolume > market.Volume.Value).ToList();
                             break;
                         default: break;
                     }
                 }
 
                 // Rise or drop
-                filteredMarket = filteredMarket.Where(x => x.rise >= market.Rise || x.drop <= market.Drop).ToList();
+                filteredMarket = filteredMarket.Where(x => x.Rise >= market.Rise || x.Drop <= market.Drop).ToList();
 
                 // Add to results
                 results.AddRange(filteredMarket);
@@ -142,7 +142,7 @@ namespace AltradyNotifier.Notifier
 
                     results.Add(
                         timeframe,
-                        items.GroupBy(x => x.id).ToDictionary(k => k.Key, v => v.OrderByDescending(_ => _.marketPrices.Max(_ => _.time)).First()).Select(x => x.Value).ToList()
+                        items.GroupBy(x => x.Id).ToDictionary(k => k.Key, v => v.OrderByDescending(_ => _.MarketPrices.Max(_ => _.Time)).First()).Select(x => x.Value).ToList()
                         );
                 }
                 else if (currentQuickScan.ContainsKey(timeframe))

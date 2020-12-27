@@ -16,7 +16,7 @@ namespace AltradyNotifier.Notifier
         private readonly Api.Rest _apiRest;
         private readonly Pushover.Pushover _pushover;
 
-        private CultureInfo _cultureInfo => new CultureInfo(_config.CultureInfo);
+        private CultureInfo CultureInfoLcl => new CultureInfo(_config.CultureInfo);
 
 
         public Altrady(Entities.Configuration.Global config, CancellationToken token)
@@ -52,17 +52,17 @@ namespace AltradyNotifier.Notifier
                         {
                             (string title, string message) pushoverMessage = default;
 
-                            pushoverMessage.title = $"Quick Scan ({newItems.Key}) @ {(item.marketPrices?.Max(x => x.time) ?? DateTime.Now).ToLocalTime():HH:mm}";
+                            pushoverMessage.title = $"Quick Scan ({newItems.Key}) @ {(item.MarketPrices?.Max(x => x.Time) ?? DateTime.Now).ToLocalTime():HH:mm}";
 
-                            pushoverMessage.message = $"Exchange: {item.exchangeName}";
-                            pushoverMessage.message += $"\r\nMarket: {item.baseCurrency.ToUpper()}/{item.quoteCurrency.ToUpper()}";
-                            if (item.rise != null && item.rise > 0)
-                                pushoverMessage.message += $"\r\nRise: {item.rise.Value.Format(_cultureInfo, 2)}%";
-                            if (item.drop != null && item.drop < 0)
-                                pushoverMessage.message += $"\r\nDrop: {item.drop.Value.Format(_cultureInfo, 2)}%";
+                            pushoverMessage.message = $"Exchange: {item.ExchangeName}";
+                            pushoverMessage.message += $"\r\nMarket: {item.BaseCurrency.ToUpper()}/{item.QuoteCurrency.ToUpper()}";
+                            if (item.Rise != null && item.Rise > 0)
+                                pushoverMessage.message += $"\r\nRise: {item.Rise.Value.Format(CultureInfoLcl, 2)}%";
+                            if (item.Drop != null && item.Drop < 0)
+                                pushoverMessage.message += $"\r\nDrop: {item.Drop.Value.Format(CultureInfoLcl, 2)}%";
 
-                            pushoverMessage.message += $"\r\nLast price: ₿ {item.lastPrice.Format(_cultureInfo, CalculatePrecision(item.lastPrice))}";
-                            pushoverMessage.message += $"\r\nVolume: $ {item.usdVolume.Format(_cultureInfo, 0)} | ₿ {item.btcVolume.Format(_cultureInfo, 2)}";
+                            pushoverMessage.message += $"\r\nLast price: ₿ {item.LastPrice.Format(CultureInfoLcl, CalculatePrecision(item.LastPrice))}";
+                            pushoverMessage.message += $"\r\nVolume: $ {item.UsdVolume.Format(CultureInfoLcl, 0)} | ₿ {item.BtcVolume.Format(CultureInfoLcl, 2)}";
 
                             Log.Debug($"Sending notification | Title: {pushoverMessage.title} | Message: {pushoverMessage.message}");
                             await _pushover.SendMessageAsync(pushoverMessage);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -40,10 +41,11 @@ namespace AltradyNotifier.Api
         {
             string endpoint = "/markets";
 
-            var param = new List<(string, string)>();
-
-            param.Add(("algorithm", algorithm));
-            param.Add(("exchange_code", exchangeCode));
+            var param = new List<(string, string)>
+            {
+                ("algorithm", algorithm),
+                ("exchange_code", exchangeCode)
+            };
 
             return await GetDataAsync(endpoint, param);
         }
@@ -52,9 +54,10 @@ namespace AltradyNotifier.Api
         {
             string endpoint = "/markets/quick_scan";
 
-            var param = new List<(string, string)>();
-
-            param.Add(("timeframe", timeframe));
+            var param = new List<(string, string)>
+            {
+                ("timeframe", timeframe)
+            };
 
             return await GetDataAsync(endpoint, param);
         }
@@ -69,11 +72,9 @@ namespace AltradyNotifier.Api
 
                 // Create URL
                 string requestUri = $"{apiUrl}{endpoint}?api_key={_config.Altrady.ApiKey}";
-                if (param != null)
-                {
-                    foreach (var (key, value) in param)
-                        requestUri += $"&{key}={value}";
-                }
+
+                if (param != null)                
+                    requestUri += string.Join('&', param.Select(x => $"{x.key}={x.value}"));
 
                 // Create request with headers
                 var request = new HttpRequestMessage
@@ -110,12 +111,12 @@ namespace AltradyNotifier.Api
 
         private async Task DelayApiCall()
         {
-            double maxApiCallsPerMilliSecond = (double)_config.Altrady.MaxApiCallsPerHour / 60 / 60 / 1000;
+            double maxApiCallsPerMilliSecond = _config.Altrady.MaxApiCallsPerHour / 60d / 60d / 1000d;
 
-            var apiDelay = (int)(1 / maxApiCallsPerMilliSecond);
+            int apiDelay = (int)(1d / maxApiCallsPerMilliSecond);
             apiDelay += new Random().Next(251, 499); // Add some additional delay
 
-            _fallBackMultiplier = Math.Min(_fallBackMultiplier, int.MaxValue / apiDelay);
+            _fallBackMultiplier = Math.Min(_fallBackMultiplier, int.MaxValue / apiDelay); // prevent int overflow on next line
 
             await Task.Delay(_fallBackMultiplier * apiDelay, _token);
         }

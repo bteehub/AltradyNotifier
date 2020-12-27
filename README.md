@@ -26,7 +26,7 @@ In order to use the releases from Github you will need download and install [Mic
 
 This is required as Github limits releases to 10MB and a self contained release (which wouldn't require .NET Core to be installed on your computer) is around 25-30MB. 
 
-**Excuteables**
+**Executable**
 
 The releases are on Github [here](https://github.com/bteehub/AltradyNotifier/releases). Download the one suitable for your operating system.
 
@@ -60,7 +60,7 @@ The program is configured by the *AltradyNotifier.json* file in the main binary 
 ## Launch
 Start the *AltradyNotifier* executeable on your operating system. You can do this by:
  * **Windows**: Double clicking the *AltradyNotifier.exe* file
- * **Linux**: Launching a terminal / command prompt window in the folder where *AltradyNotifier* is and executing *dotnet AltradyNotifier*
+ * **Linux**: Launching a terminal / command prompt window in the folder where *AltradyNotifier* is located and executing *dotnet AltradyNotifier*. In case you are missing permissions give yourself the executing permission with the command *chmod og+x ./AltradyNotifier*.
  * **MacOS**: Launching a terminal window in the folder where *AltradyNotifier* is and executing *dotnet AltradyNotifier.dll*
 
 Don't close the window. In order to stop the application press any key in the terminal window.

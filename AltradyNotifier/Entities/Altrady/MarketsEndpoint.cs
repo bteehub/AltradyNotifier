@@ -9,57 +9,120 @@ namespace AltradyNotifier.Entities.Altrady
     {
         public class Response
         {
-            public List<Market> markets;
+            [JsonProperty("markets")]
+            public List<Market> Markets { get; set; }
         }
 
         public class Market
         {
-            public string id;
-            public string baseCurrency;
-            public string quoteCurrency;
-            public string exchangeName;
-            public string exchangeCode;
-            public string longName;
-            public string marketName;
-            public string symbol;
+            [JsonProperty("id")]
+            public string Id { get; set; }
 
-            public decimal volume;
-            public decimal quoteVolume;
-            public decimal btcVolume;
-            public decimal usdVolume;
-            public decimal currentPrice;
+            [JsonProperty("baseCurrency")]
+            public string BaseCurrency { get; set; }
 
-            public LatestBase latestBase;
+            [JsonProperty("quoteCurrency")]
+            public string QuoteCurrency { get; set; }
 
-            public List<MarketStat> marketStats;
+            [JsonProperty("exchangeName")]
+            public string ExchangeName { get; set; }
+
+            [JsonProperty("exchangeCode")]
+            public string ExchangeCode { get; set; }
+
+            [JsonProperty("longName")]
+            public string LongName { get; set; }
+
+            [JsonProperty("marketName")]
+            public string MarketName { get; set; }
+
+            [JsonProperty("symbol")]
+            public string Symbol { get; set; }
+
+
+            [JsonProperty("volume")]
+            public decimal Volume { get; set; }
+
+            [JsonProperty("quoteVolume")]
+            public decimal QuoteVolume { get; set; }
+
+            [JsonProperty("btcVolume")]
+            public decimal BtcVolume { get; set; }
+
+            [JsonProperty("usdVolume")]
+            public decimal UsdVolume { get; set; }
+            
+            [JsonProperty("currentPrice")]
+            public decimal CurrentPrice { get; set; }
+
+
+            [JsonProperty("latestBase")]
+            public LatestBase LatestBase { get; set; }
+
+
+            [JsonProperty("marketStats")]
+            public List<MarketStat> MarketStats { get; set; }
         }
 
         public class MarketStat
         {
-            public string algorithm;
-            public decimal ratio;
-            public decimal medianDrop;
-            public decimal medianBounce;
-            public int hoursToRespected;
-            public int crackedCount;
-            public int respectedCount;
+            [JsonProperty("algorithm")]
+            public string Algorithm { get; set; }
+
+            [JsonProperty("ratio")]
+            public decimal Ratio { get; set; }
+
+            [JsonProperty("medianDrop")]
+            public decimal MedianDrop { get; set; }
+
+            [JsonProperty("medianBounce")]
+            public decimal MedianBounce { get; set; }
+
+            [JsonProperty("hoursToRespected")]
+            public int HoursToRespected { get; set; }
+
+            [JsonProperty("crackedCount")]
+            public int CrackedCount { get; set; }
+
+            [JsonProperty("respectedCount")]
+            public int RespectedCount { get; set; }
         }
 
         public class LatestBase
         {
-            public string id;
+            [JsonProperty("id")]
+            public string Id { get; set; }
+
+            [JsonProperty("time")]
             [JsonConverter(typeof(UnixDateTimeConverter))]
-            public DateTime time;
-            public DateTime date;
+            public DateTime Time { get; set; }
 
-            public decimal price;
-            public decimal lowestPrice;
-            public decimal bounce;
-            public decimal current_drop;
+            [JsonProperty("date")]
+            public DateTime Date { get; set; }
 
-            public DateTime createdAt;
-            public DateTime? respectedAt;
-            public bool isLowest;
+
+            [JsonProperty("price")]
+            public decimal Price { get; set; }
+
+            [JsonProperty("lowestPrice")]
+            public decimal LowestPrice { get; set; }
+
+            [JsonProperty("bounce")]
+            public decimal Bounce { get; set; }
+
+            [JsonProperty("current_drop")]
+            public decimal CurrentDrop { get; set; }
+
+
+            [JsonProperty("createdAt")]
+            public DateTime CreatedAt { get; set; }
+
+            [JsonProperty("respectedAt")]
+            public DateTime? RespectedAt { get; set; }
+
+            [JsonProperty("isLowest")]
+            public bool IsLowest { get; set; }
         }
     }
 }
+

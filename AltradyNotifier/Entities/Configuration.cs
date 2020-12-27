@@ -6,46 +6,46 @@ namespace AltradyNotifier.Entities
     {
         public class Global
         {
-            public string CultureInfo;
-            public int MaxPrecision;
-            public Altrady Altrady;
-            public Pushover Pushover;
-            public List<Filter> Filter;
+            public string CultureInfo { get; set; }
+            public int MaxPrecision { get; set; }
+            public Altrady Altrady { get; set; }
+            public Pushover Pushover { get; set; }
+            public List<Filter> Filter { get; set; }
         }
 
         public class Altrady
         {
-            public int MaxApiCallsPerHour;
-            public string ApiKey;
+            public int MaxApiCallsPerHour { get; set; }
+            public string ApiKey { get; set; }
         }
 
         public class Pushover
         {
-            public string UserToken;
-            public string ApplicationToken;
+            public string UserToken { get; set; }
+            public string ApplicationToken { get; set; }
         }
 
         public class Filter
         {
-            public int Timeframe;
-            public string ExcludedMarkets;
-            public List<ExchangeMarketFilter> ExchangeMarket;
+            public int Timeframe { get; set; }
+            public string ExcludedMarkets { get; set; }
+            public List<ExchangeMarketFilter> ExchangeMarket { get; set; }
         }
 
         public class ExchangeMarketFilter
         {
-            public string Exchange;
-            public string Market;
-            public Volume Volume;
-            public decimal Rise;
-            public decimal Drop;
+            public string Exchange { get; set; }
+            public string Market { get; set; }
+            public Volume Volume { get; set; }
+            public decimal Rise { get; set; }
+            public decimal Drop { get; set; }
 
         }
 
         public class Volume
         {
-            public string Currency;
-            public decimal Value;
+            public string Currency { get; set; }
+            public decimal Value { get; set; }
         }
     }
 }
