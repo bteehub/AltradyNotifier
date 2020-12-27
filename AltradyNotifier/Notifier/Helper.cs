@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AltradyNotifier.Notifier
@@ -13,7 +13,7 @@ namespace AltradyNotifier.Notifier
             return market.Split(',')
                 .Select(x => x.Split('/'))
                 .Where(x => x.Length == 2)
-                .Select(x => (x[0], x[1]))
+                .Select(x => (x[0].Trim(), x[1].Trim()))
                 .Where(x => !(string.IsNullOrEmpty(x.Item1) && string.IsNullOrEmpty(x.Item2)))
                 .ToList();
         }
