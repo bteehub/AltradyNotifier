@@ -11,12 +11,12 @@ namespace AltradyNotifier.Api
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         
-        private readonly Classes.Configuration.Global _config;
+        private readonly Entities.Configuration.Global _config;
         private readonly CancellationToken _token;
 
         private int _fallBackMultiplier;
         
-        public Rest(Classes.Configuration.Global config, CancellationToken token)
+        public Rest(Entities.Configuration.Global config, CancellationToken token)
         {
             _config = config;
             _token = token;
@@ -83,21 +83,20 @@ namespace AltradyNotifier.Api
                 };
 
                 // Send Request
-                using (var client = new HttpClient())
-                {
-                    var response = await client.SendAsync(request);
-                    if (response.IsSuccessStatusCode)
-                    {
-                        _fallBackMultiplier = 1;
-                        return await response.Content.ReadAsStringAsync();
-                    }
-                    else
-                    {
-                        Log.Debug($"Response successful: {response.IsSuccessStatusCode}, status code: {response.StatusCode}, reason: {response.ReasonPhrase}");
+                using var client = new HttpClient();
 
-                        if (response.StatusCode == HttpStatusCode.TooManyRequests)
-                            _fallBackMultiplier *= 2;              
-                    }
+                var response = await client.SendAsync(request);
+                if (response.IsSuccessStatusCode)
+                {
+                    _fallBackMultiplier = 1;
+                    return await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    Log.Debug($"Response successful: {response.IsSuccessStatusCode}, status code: {response.StatusCode}, reason: {response.ReasonPhrase}");
+
+                    if (response.StatusCode == HttpStatusCode.TooManyRequests)
+                        _fallBackMultiplier *= 2;
                 }
             }
             catch (TaskCanceledException) { throw; }

@@ -8,7 +8,7 @@ namespace AltradyNotifier.Api
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
         
-        public static List<Classes.Altrady.BasesEndpoint.Base> ParseBases(object result)
+        public static List<Entities.Altrady.BasesEndpoint.Base> ParseBases(object result)
         {
             if (result == null)
             {
@@ -18,7 +18,7 @@ namespace AltradyNotifier.Api
 
             try
             {
-                var response = JsonConvert.DeserializeObject<Classes.Altrady.BasesEndpoint.Response>(result as string);
+                var response = JsonConvert.DeserializeObject<Entities.Altrady.BasesEndpoint.Response>(result as string);
                 return response.bases;
             }
             catch (Exception ex)
@@ -29,7 +29,7 @@ namespace AltradyNotifier.Api
             return null;
         }
 
-        public static List<Classes.Altrady.MarketsEndpoint.Market> ParseMarkets(object result)
+        public static List<Entities.Altrady.MarketsEndpoint.Market> ParseMarkets(object result)
         {
             if (result == null)
             {
@@ -39,7 +39,7 @@ namespace AltradyNotifier.Api
 
             try
             {
-                var response = JsonConvert.DeserializeObject<Classes.Altrady.MarketsEndpoint.Response>(result as string);
+                var response = JsonConvert.DeserializeObject<Entities.Altrady.MarketsEndpoint.Response>(result as string);
                 return response.markets;
             }
             catch (Exception ex)
@@ -50,7 +50,7 @@ namespace AltradyNotifier.Api
             return null;
         }
 
-        public static List<Classes.Altrady.QuickScanEndpoint.Market> ParseQuickScan(object result)
+        public static List<Entities.Altrady.QuickScanEndpoint.Market> ParseQuickScan(object result)
         {
             if (result == null)
             {
@@ -60,7 +60,7 @@ namespace AltradyNotifier.Api
 
             try
             {
-                var response = JsonConvert.DeserializeObject<Classes.Altrady.QuickScanEndpoint.Response>(result as string);
+                var response = JsonConvert.DeserializeObject<Entities.Altrady.QuickScanEndpoint.Response>(result as string);
                 return response.markets;
             }
             catch (Exception ex)

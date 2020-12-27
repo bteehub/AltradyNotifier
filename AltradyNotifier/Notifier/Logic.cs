@@ -9,7 +9,7 @@ namespace AltradyNotifier.Notifier
         /// <summary>
         /// Apply filter and clean up history
         /// </summary>
-        private Dictionary<int, List<Classes.Altrady.QuickScanEndpoint.Market>> FilterQuickScan(Dictionary<int, List<Classes.Altrady.QuickScanEndpoint.Market>> quickScan)
+        private Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>> FilterQuickScan(Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>> quickScan)
         {
             foreach (var timeframe in quickScan.Keys.ToList())
             {
@@ -41,16 +41,16 @@ namespace AltradyNotifier.Notifier
         /// <summary>
         /// Apply market filter
         /// </summary>
-        private static List<Classes.Altrady.QuickScanEndpoint.Market> ApplyMarketFilter(List<Classes.Altrady.QuickScanEndpoint.Market> quickScan, Classes.Configuration.Filter filter)
+        private static List<Entities.Altrady.QuickScanEndpoint.Market> ApplyMarketFilter(List<Entities.Altrady.QuickScanEndpoint.Market> quickScan, Entities.Configuration.Filter filter)
         {
             if (filter.ExchangeMarket == default)
                 return quickScan;
 
-            var results = new List<Classes.Altrady.QuickScanEndpoint.Market>();
+            var results = new List<Entities.Altrady.QuickScanEndpoint.Market>();
 
             foreach (var market in filter.ExchangeMarket)
             {
-                var filteredMarket = new List<Classes.Altrady.QuickScanEndpoint.Market>();
+                var filteredMarket = new List<Entities.Altrady.QuickScanEndpoint.Market>();
 
                 // Market
                 if (ParseMarketString(market.Market).Any())
@@ -99,19 +99,25 @@ namespace AltradyNotifier.Notifier
         /// <summary>
         /// Get new quick scan items
         /// </summary>
-        private static Dictionary<int, List<Classes.Altrady.QuickScanEndpoint.Market>> GetNewQuickScan(Dictionary<int, List<Classes.Altrady.QuickScanEndpoint.Market>> previousQuickScan, Dictionary<int, List<Classes.Altrady.QuickScanEndpoint.Market>> currentQuickScan)
+        private static Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>> GetNewQuickScan(Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>> previousQuickScan, Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>> currentQuickScan)
         {
-            var results = new Dictionary<int, List<Classes.Altrady.QuickScanEndpoint.Market>>();
+            var results = new Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>>();
 
             foreach (var timeframe in previousQuickScan.Keys.Concat(currentQuickScan.Keys).Distinct())
             {
                 if (previousQuickScan.ContainsKey(timeframe) && currentQuickScan.ContainsKey(timeframe))
                 {
-                    results.Add(timeframe, currentQuickScan[timeframe].Except(previousQuickScan[timeframe], new Classes.Altrady.QuickScanEndpoint.MarketCompare()).ToList());
+                    var newItems = currentQuickScan[timeframe]
+                        .Except(previousQuickScan[timeframe], new Entities.Altrady.QuickScanEndpoint.MarketCompare())
+                        .ToList();
+
+                    results.Add(timeframe, newItems);
                 }
                 else if (currentQuickScan.ContainsKey(timeframe))
                 {
-                    results.Add(timeframe, currentQuickScan[timeframe]);
+                    var newItems = currentQuickScan[timeframe];
+
+                    results.Add(timeframe, newItems);
                 }
             }
 
@@ -121,16 +127,15 @@ namespace AltradyNotifier.Notifier
         /// <summary>
         /// Merge two quick scan lists to have a proper history list.
         /// </summary>
-        /// <returns></returns>
-        private static Dictionary<int, List<Classes.Altrady.QuickScanEndpoint.Market>> PopulateQuickScan(Dictionary<int, List<Classes.Altrady.QuickScanEndpoint.Market>> previousQuickScan, Dictionary<int, List<Classes.Altrady.QuickScanEndpoint.Market>> currentQuickScan)
+        private static Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>> PopulateQuickScan(Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>> previousQuickScan, Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>> currentQuickScan)
         {
-            var results = new Dictionary<int, List<Classes.Altrady.QuickScanEndpoint.Market>>();
+            var results = new Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>>();
 
             foreach (var timeframe in previousQuickScan.Keys.Concat(currentQuickScan.Keys).Distinct())
             {
                 if (previousQuickScan.ContainsKey(timeframe))
                 {
-                    var items = new List<Classes.Altrady.QuickScanEndpoint.Market>(previousQuickScan[timeframe]);
+                    var items = new List<Entities.Altrady.QuickScanEndpoint.Market>(previousQuickScan[timeframe]);
 
                     if (currentQuickScan.ContainsKey(timeframe))
                         items.AddRange(currentQuickScan[timeframe]);

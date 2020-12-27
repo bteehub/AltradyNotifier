@@ -7,7 +7,7 @@ namespace AltradyNotifier
 {
     public class Program
     {
-        private static Pushover _pushover = null;
+        private static Pushover.Pushover _pushover = null;
 
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
@@ -17,9 +17,9 @@ namespace AltradyNotifier
 
             Log.Debug($"Started");
 
-            var jsonConfig = JsonConvert.DeserializeObject<Classes.Configuration.Global>(System.IO.File.ReadAllText($"{nameof(AltradyNotifier)}.json"));
+            var jsonConfig = JsonConvert.DeserializeObject<Entities.Configuration.Global>(System.IO.File.ReadAllText($"{nameof(AltradyNotifier)}.json"));
 
-            _pushover = new Pushover(jsonConfig.Pushover.UserToken, jsonConfig.Pushover.ApplicationToken);
+            _pushover = new Pushover.Pushover(jsonConfig.Pushover.UserToken, jsonConfig.Pushover.ApplicationToken);
             _pushover.SendMessage($"Status @ {DateTime.Now:HH:mm}", "Program started");
 
             var cancellationToken = new CancellationTokenSource();

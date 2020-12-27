@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Specialized;
 using System.Net;
 
-namespace AltradyNotifier
+namespace AltradyNotifier.Pushover
 {
     public class Pushover
     {

@@ -3,7 +3,7 @@ using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 
-namespace AltradyNotifier.Classes.Altrady
+namespace AltradyNotifier.Entities.Altrady
 {
     public class QuickScanEndpoint
     {

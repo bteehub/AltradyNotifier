@@ -3,16 +3,16 @@ using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 
-namespace AltradyNotifier.Classes.Altrady
+namespace AltradyNotifier.Entities.Altrady
 {
-    public class MarketsEndpoint
+    public class BasesEndpoint
     {
         public class Response
         {
-            public List<Market> markets;
+            public List<Base> bases;
         }
 
-        public class Market
+        public class Base
         {
             public string id;
             public string baseCurrency;
@@ -61,5 +61,5 @@ namespace AltradyNotifier.Classes.Altrady
             public DateTime? respectedAt;
             public bool isLowest;
         }
-    }
+    }    
 }

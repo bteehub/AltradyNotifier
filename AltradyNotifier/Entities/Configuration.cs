@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace AltradyNotifier.Classes
+namespace AltradyNotifier.Entities
 {
     public class Configuration
     {

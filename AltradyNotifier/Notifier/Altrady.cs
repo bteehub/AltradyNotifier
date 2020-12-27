@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -11,22 +10,22 @@ namespace AltradyNotifier.Notifier
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
 
-        private Classes.Configuration.Global _config;
-        private CancellationToken _token;
+        private readonly Entities.Configuration.Global _config;
+        private readonly CancellationToken _token;
 
-        private Api.Rest _apiRest;
-        private Pushover _pushover;
+        private readonly Api.Rest _apiRest;
+        private readonly Pushover.Pushover _pushover;
 
         private CultureInfo _cultureInfo => new CultureInfo(_config.CultureInfo);
 
 
-        public Altrady(Classes.Configuration.Global config, CancellationToken token)
+        public Altrady(Entities.Configuration.Global config, CancellationToken token)
         {
             _config = config;
             _token = token;
 
             _apiRest = new Api.Rest(config, token);
-            _pushover = new Pushover(config.Pushover.UserToken, config.Pushover.ApplicationToken);
+            _pushover = new Pushover.Pushover(config.Pushover.UserToken, config.Pushover.ApplicationToken);
         }
 
         public async Task RunAsync()
@@ -65,7 +64,7 @@ namespace AltradyNotifier.Notifier
                             pushoverMessage.message += $"\r\nLast price: ₿ {item.lastPrice.Format(_cultureInfo, CalculatePrecision(item.lastPrice))}";
                             pushoverMessage.message += $"\r\nVolume: $ {item.usdVolume.Format(_cultureInfo, 0)} | ₿ {item.btcVolume.Format(_cultureInfo, 2)}";
 
-                            Log.Info($"Sending notification # {pushoverMessage.title} # {pushoverMessage.message}");
+                            Log.Debug($"Sending notification | Title: {pushoverMessage.title} | Message: {pushoverMessage.message}");
                             _pushover.SendMessage(pushoverMessage);
                         }
                     }

@@ -9,7 +9,7 @@ namespace AltradyNotifier.Notifier
             string format = "#,##0";
 
             if (precision > 0)
-                format += "." + new string('0', precision);
+                format += $".{new string('0', precision)}";
 
             return rate.ToString(format, cultureInfo);
         }
