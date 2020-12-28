@@ -3,4 +3,7 @@
 /AltradyNotifier/obj
 /AltradyNotifier/pub
 /AltradyNotifier/AltradyNotifier.csproj.user
-AltradyNotifier/AltradyNotifier.Btee.json
+/AltradyNotifier/AltradyNotifier.Btee.json
+
+/AltradyNotifier.Test/bin
+/AltradyNotifier.Test/obj

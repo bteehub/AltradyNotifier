@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace AltradyNotifier.Notifier
+namespace AltradyNotifier.Logic
 {
     public static class Extensions
     {
