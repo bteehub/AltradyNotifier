@@ -19,7 +19,7 @@ namespace AltradyNotifier.Notifier
             }
 
             // Clean up duplicates
-            foreach (var key in quickscan.Keys)
+            foreach (var key in quickscan.Keys.ToList())
                 quickscan[key] = GetDistinctQuickScanMarkets(quickscan[key]);
             
             return quickscan;
