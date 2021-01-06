@@ -73,8 +73,8 @@ namespace AltradyNotifier.Api
                 // Create URL
                 string requestUri = $"{apiUrl}{endpoint}?api_key={_config.Altrady.ApiKey}";
 
-                if (param != null)                
-                    requestUri += string.Join('&', param.Select(x => $"{x.key}={x.value}"));
+                if (param != null)
+                    requestUri += string.Join(string.Empty, param.Select(x => $"&{x.key}={x.value}")); ;
 
                 // Create request with headers
                 var request = new HttpRequestMessage

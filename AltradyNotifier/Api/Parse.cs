@@ -21,8 +21,7 @@ namespace AltradyNotifier.Api
         {
             if (result == null)
             {
-                Log.Debug($"{nameof(result)} is null");
-
+                Log.Debug($"{nameof(result)}: null");
                 return null;
             }
 

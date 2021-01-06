@@ -25,7 +25,8 @@ namespace AltradyNotifier.Pushover
             _token = token.Trim();
         }
 
-        public async Task<Reponse.RateLimit> SendMessageAsync((string title, string message) titleMessage) => await SendMessageAsync(titleMessage.title, titleMessage.message);
+        public async Task<Reponse.RateLimit> SendMessageAsync((string title, string message) titleMessage) 
+            => await SendMessageAsync(titleMessage.title, titleMessage.message);
 
         public async Task<Reponse.RateLimit> SendMessageAsync(string title, string message)
         {

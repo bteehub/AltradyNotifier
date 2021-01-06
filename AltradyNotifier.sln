@@ -7,10 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AltradyNotifier", "AltradyN
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{452245B7-C70C-4110-8E4C-55393DC4A809}"
 	ProjectSection(SolutionItems) = preProject
-		AltradyNotifier\.gitignore = AltradyNotifier\.gitignore
+		.gitignore = .gitignore
 		altrady.png = altrady.png
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AltradyNotifier.Test", "AltradyNotifier.Test\AltradyNotifier.Test.csproj", "{3BF20981-4F9B-4315-9EEE-A32F0796DF38}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,6 +24,10 @@ Global
 		{EB19D455-8CC4-4B58-A7D5-A8C92D358AD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB19D455-8CC4-4B58-A7D5-A8C92D358AD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB19D455-8CC4-4B58-A7D5-A8C92D358AD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BF20981-4F9B-4315-9EEE-A32F0796DF38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BF20981-4F9B-4315-9EEE-A32F0796DF38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BF20981-4F9B-4315-9EEE-A32F0796DF38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BF20981-4F9B-4315-9EEE-A32F0796DF38}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
