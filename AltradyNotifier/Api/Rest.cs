@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace AltradyNotifier.Api
 {
+    /// <summary>
+    /// Documentation of API: https://cryptobasescanner.docs.apiary.io/
+    /// </summary>
     public class Rest
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
