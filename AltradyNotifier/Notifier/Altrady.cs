@@ -1,4 +1,4 @@
-﻿using AltradyNotifier.Logic;
+using AltradyNotifier.Logic;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -53,7 +53,8 @@ namespace AltradyNotifier.Notifier
                         {
                             (string title, string message) pushoverMessage = default;
 
-                            pushoverMessage.title = $"Quick Scan ({newItems.Key}) @ {(item.MarketPrices?.Max(x => x.Time) ?? DateTime.Now).ToLocalTime():HH:mm}";
+                            pushoverMessage.title = $"Quick Scan ({newItems.Key})";
+                            pushoverMessage.title += $" @ {(item.MarketPrices?.Max(x => x.Time) ?? DateTime.UtcNow).ToLocalTime().ToLongTimePattern(CultureInfoLcl)}";
 
                             pushoverMessage.message = $"Exchange: {item.ExchangeName}";
                             pushoverMessage.message += $"\r\nMarket: {item.BaseCurrency.ToUpper()}/{item.QuoteCurrency.ToUpper()}";

@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 
 namespace AltradyNotifier.Logic
 {
@@ -12,6 +13,11 @@ namespace AltradyNotifier.Logic
                 format += $".{new string('0', precision)}";
 
             return rate.ToString(format, cultureInfo);
+        }
+
+        public static string ToLongTimePattern(this DateTime dateTime, CultureInfo cultureInfo)
+        {
+            return dateTime.ToString(cultureInfo.DateTimeFormat.LongTimePattern);
         }
     }
 }

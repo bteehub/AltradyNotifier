@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json;
+using AltradyNotifier.Logic;
+using Newtonsoft.Json;
 using System;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,9 +20,10 @@ namespace AltradyNotifier
             Log.Debug($"Started");
 
             var jsonConfig = JsonConvert.DeserializeObject<Entities.Configuration.Global>(System.IO.File.ReadAllText($"{nameof(AltradyNotifier)}.json"));
+            var cultureInfo = new CultureInfo(jsonConfig.CultureInfo);
 
             _pushover = new Pushover.Pushover(jsonConfig.Pushover.UserToken, jsonConfig.Pushover.ApplicationToken);
-            await _pushover.SendMessageAsync($"Status @ {DateTime.Now:HH:mm}", "Program started");
+            await _pushover.SendMessageAsync($"Status @ {DateTime.Now.ToLongTimePattern(cultureInfo)}", "Program started");
 
             var cancellationToken = new CancellationTokenSource();
             var t = Task.Run(async () =>
@@ -34,7 +37,7 @@ namespace AltradyNotifier
                 catch (Exception ex)
                 {
                     Log.Fatal(ex);
-                    await _pushover.SendMessageAsync($"Exception occured @ {DateTime.Now:HH:mm}", $"{nameof(AltradyNotifier)} crashed: {ex.Message}");
+                    await _pushover.SendMessageAsync($"Exception occured @ {DateTime.Now.ToLongTimePattern(cultureInfo)}", $"{nameof(AltradyNotifier)} crashed: {ex.Message}");
                 }
             }, cancellationToken.Token);
 
@@ -44,7 +47,7 @@ namespace AltradyNotifier
             cancellationToken.Cancel();
             await Task.WhenAll(t);
 
-            await _pushover.SendMessageAsync($"Status @ {DateTime.Now:HH:mm}", "Program stopped");
+            await _pushover.SendMessageAsync($"Status @ {DateTime.Now.ToLongTimePattern(cultureInfo)}", "Program stopped");
             Log.Debug($"Stopped");
         }
 
