@@ -18,13 +18,15 @@ namespace AltradyNotifier.Api
         private readonly Entities.Configuration.Global _config;
         private readonly CancellationToken _token;
 
+        private readonly string _baseUrl;
         private int _fallBackMultiplier;
-        
+
         public Rest(Entities.Configuration.Global config, CancellationToken token)
         {
             _config = config;
             _token = token;
 
+            _baseUrl = "https://api.cryptobasescanner.com/v1"; 
             _fallBackMultiplier = 1;
         }
 
@@ -71,10 +73,8 @@ namespace AltradyNotifier.Api
 
             try
             {
-                string apiUrl = "https://api.cryptobasescanner.com/v1";
-
                 // Create URL
-                string requestUri = $"{apiUrl}{endpoint}?api_key={_config.Altrady.ApiKey}";
+                string requestUri = $"{_baseUrl}{endpoint}?api_key={_config.Altrady.ApiKey}";
 
                 if (param != null)
                     requestUri += string.Join(string.Empty, param.Select(x => $"&{x.key}={x.value}")); ;
@@ -103,7 +103,10 @@ namespace AltradyNotifier.Api
                         _fallBackMultiplier *= 2;
                 }
             }
-            catch (TaskCanceledException) { throw; }
+            catch (TaskCanceledException) 
+            { 
+                throw; 
+            }
             catch (Exception ex)
             {
                 Log.Error(ex);

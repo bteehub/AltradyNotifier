@@ -26,14 +26,16 @@ namespace AltradyNotifier
             await _pushover.SendMessageAsync($"Status @ {DateTime.Now.ToLongTimePattern(cultureInfo)}", "Program started");
 
             var cancellationToken = new CancellationTokenSource();
-            var t = Task.Run(async () =>
+            var task = Task.Run(async () =>
             {
                 try
                 {
                     var altrady = new Notifier.Altrady(jsonConfig, cancellationToken.Token);
                     await altrady.RunAsync();
                 }
-                catch (TaskCanceledException) { }
+                catch (TaskCanceledException) 
+                { 
+                }
                 catch (Exception ex)
                 {
                     Log.Fatal(ex);
@@ -45,7 +47,7 @@ namespace AltradyNotifier
             await Task.Run(() => Console.ReadKey());
 
             cancellationToken.Cancel();
-            await Task.WhenAll(t);
+            await Task.WhenAll(task);
 
             await _pushover.SendMessageAsync($"Status @ {DateTime.Now.ToLongTimePattern(cultureInfo)}", "Program stopped");
             Log.Debug($"Stopped");

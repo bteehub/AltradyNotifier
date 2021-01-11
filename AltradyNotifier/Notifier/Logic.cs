@@ -11,6 +11,8 @@ namespace AltradyNotifier.Notifier
         /// </summary>
         private Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>> FilterQuickScan(Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>> quickScan)
         {
+            var utcNow = DateTime.UtcNow;
+
             foreach (var timeframe in quickScan.Keys.ToList())
             {
                 // Find the timeframe filter in the config
@@ -20,7 +22,7 @@ namespace AltradyNotifier.Notifier
                     continue;
 
                 // Clean up history
-                quickScan[timeframe] = quickScan[timeframe].Where(x => x.MarketPrices.Max(_ => _.Time) > DateTime.UtcNow.AddMinutes(-timeframe)).ToList();
+                quickScan[timeframe] = quickScan[timeframe].Where(x => x.MarketPrices.Max(_ => _.Time) > utcNow.AddMinutes(-timeframe)).ToList();
 
                 // Exclude markets
                 foreach ((string baseCurrency, string quoteCurrency) in ParseMarketString(filter.ExcludedMarkets))
@@ -82,7 +84,8 @@ namespace AltradyNotifier.Notifier
                         case "BTC":
                             filteredMarket = filteredMarket.Where(x => x.BtcVolume > market.Volume.Value).ToList();
                             break;
-                        default: break;
+                        default: 
+                            break;
                     }
                 }
 
@@ -125,7 +128,7 @@ namespace AltradyNotifier.Notifier
         }
 
         /// <summary>
-        /// Merge two quick scan lists to have a proper history list.
+        /// Merge two quick scan lists to have a proper history list
         /// </summary>
         private static Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>> PopulateQuickScan(Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>> previousQuickScan, Dictionary<int, List<Entities.Altrady.QuickScanEndpoint.Market>> currentQuickScan)
         {

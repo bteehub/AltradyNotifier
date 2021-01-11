@@ -21,8 +21,8 @@ namespace AltradyNotifier.Pushover
         {
             _baseUrl = "https://api.pushover.net/1";
 
-            _user = user.Trim();
-            _token = token.Trim();
+            _user = user;
+            _token = token;
         }
 
         public async Task<Reponse.RateLimit> SendMessageAsync((string title, string message) titleMessage) 

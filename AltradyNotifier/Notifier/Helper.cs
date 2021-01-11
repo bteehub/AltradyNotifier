@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AltradyNotifier.Notifier
@@ -25,7 +26,7 @@ namespace AltradyNotifier.Notifier
             while ((minTradeSize - (long)minTradeSize) > 0 && precision < _config.MaxPrecision)
             {
                 precision++;
-                minTradeSize = decimal.Multiply(minTradeSize, 10);
+                minTradeSize = decimal.Multiply(minTradeSize, 10m);
             }
 
             return precision;

@@ -1,4 +1,4 @@
-using AltradyNotifier.Logic;
+﻿using AltradyNotifier.Logic;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -18,7 +18,6 @@ namespace AltradyNotifier.Notifier
         private readonly Pushover.Pushover _pushover;
 
         private CultureInfo CultureInfoLcl => new CultureInfo(_config.CultureInfo);
-
 
         public Altrady(Entities.Configuration.Global config, CancellationToken token)
         {
@@ -74,7 +73,10 @@ namespace AltradyNotifier.Notifier
                     // Populate history
                     previousQuickScan = PopulateQuickScan(previousQuickScan, currentQuickScan);
                 }
-                catch (TaskCanceledException) { throw; }
+                catch (TaskCanceledException) 
+                { 
+                    throw; 
+                }
                 catch (Exception ex)
                 {
                     Log.Error(ex);
