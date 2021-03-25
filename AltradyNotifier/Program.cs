@@ -34,7 +34,8 @@ namespace AltradyNotifier
                     await altrady.RunAsync();
                 }
                 catch (TaskCanceledException) 
-                { 
+                {
+                    // ignored
                 }
                 catch (Exception ex)
                 {
