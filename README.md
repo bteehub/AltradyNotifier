@@ -20,11 +20,11 @@ A Pushover notifier for Altrady Quick Scan functionality.
 
 You need to create (if non yet created) an API key in your [Altrady account](https://app.altrady.com/dashboard#/settings/api_settings) and place it in the *AltradyNotifier.json* file (see configuration below).
 
-**Microsoft .NET Core**
+**Microsoft .NET 5**
 
-In order to use the releases from Github you will need download and install [Microsoft .NET Core Runtime 3.1.x](https://dotnet.microsoft.com/download/dotnet-core/3.1) for your operating system. 
+In order to use the releases from Github you will need download and install [Microsoft .NET Runtime 5.0.x](https://dotnet.microsoft.com/download/dotnet/5.0) for your operating system. 
 
-This is required as Github limits releases to 10MB and a self contained release (which wouldn't require .NET Core to be installed on your computer) is around 25-30MB. 
+This is required as Github limits releases to 10MB and a self contained release (which wouldn't require .NET 5 to be installed on your computer) is around 25-30MB. 
 
 **Executable**
 
@@ -32,7 +32,7 @@ The releases are on Github [here](https://github.com/bteehub/AltradyNotifier/rel
 
 
 ## Compile on your own
-If you don't want to download the compiled binaries you can compile them by your own using [Microsoft .NET Core 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1) SDK
+If you don't want to download the compiled binaries you can compile them by your own using [Microsoft .NET SDK 5.0.x](https://dotnet.microsoft.com/download/dotnet/5.0).
 
 ## Configuration
 The program is configured by the *AltradyNotifier.json* file in the main binary directory. Edit it with a simple text editor:
