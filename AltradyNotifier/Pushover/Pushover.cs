@@ -21,8 +21,8 @@ namespace AltradyNotifier.Pushover
         {
             _baseUrl = "https://api.pushover.net/1";
 
-            _user = user.Trim();
-            _token = token.Trim();
+            _user = user;
+            _token = token;
         }
 
         public async Task<Reponse.RateLimit> SendMessageAsync((string title, string message) titleMessage) 
@@ -62,7 +62,7 @@ namespace AltradyNotifier.Pushover
             }
             else
             {
-                Log.Debug($"Response successful: {response.IsSuccessStatusCode}, reason: {response.ReasonPhrase}");
+                Log.Debug($"Response successful: {response.IsSuccessStatusCode}, status code: {response.StatusCode}, reason: {response.ReasonPhrase}");
             }
 
             return null;
@@ -79,6 +79,7 @@ namespace AltradyNotifier.Pushover
             };
 
             using var client = new HttpClient();
+
             var response = await client.SendAsync(request);
 
             if (response.IsSuccessStatusCode)

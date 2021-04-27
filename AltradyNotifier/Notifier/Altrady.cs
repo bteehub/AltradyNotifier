@@ -19,7 +19,6 @@ namespace AltradyNotifier.Notifier
 
         private CultureInfo CultureInfoLcl => new CultureInfo(_config.CultureInfo);
 
-
         public Altrady(Entities.Configuration.Global config, CancellationToken token)
         {
             _config = config;
@@ -53,7 +52,8 @@ namespace AltradyNotifier.Notifier
                         {
                             (string title, string message) pushoverMessage = default;
 
-                            pushoverMessage.title = $"Quick Scan ({newItems.Key}) @ {(item.MarketPrices?.Max(x => x.Time) ?? DateTime.Now).ToLocalTime():HH:mm}";
+                            pushoverMessage.title = $"Quick Scan ({newItems.Key})";
+                            pushoverMessage.title += $" @ {(item.MarketPrices?.Max(x => x.Time) ?? DateTime.UtcNow).ToLocalTime().ToLongTimePattern(CultureInfoLcl)}";
 
                             pushoverMessage.message = $"Exchange: {item.ExchangeName}";
                             pushoverMessage.message += $"\r\nMarket: {item.BaseCurrency.ToUpper()}/{item.QuoteCurrency.ToUpper()}";
@@ -73,7 +73,10 @@ namespace AltradyNotifier.Notifier
                     // Populate history
                     previousQuickScan = PopulateQuickScan(previousQuickScan, currentQuickScan);
                 }
-                catch (TaskCanceledException) { throw; }
+                catch (TaskCanceledException) 
+                { 
+                    throw; 
+                }
                 catch (Exception ex)
                 {
                     Log.Error(ex);

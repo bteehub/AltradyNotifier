@@ -9,6 +9,7 @@ namespace AltradyNotifier.Entities
         {
             [JsonConverter(typeof(Logic.Converters.TrimmingConverter))]
             public string CultureInfo { get; set; }
+
             public int MaxPrecision { get; set; }
             public Altrady Altrady { get; set; }
             public Pushover Pushover { get; set; }
@@ -38,6 +39,7 @@ namespace AltradyNotifier.Entities
 
             [JsonConverter(typeof(Logic.Converters.TrimmingConverter))]
             public string ExcludedMarkets { get; set; }
+
             public List<ExchangeMarketFilter> ExchangeMarket { get; set; }
         }
 
@@ -48,6 +50,7 @@ namespace AltradyNotifier.Entities
 
             [JsonConverter(typeof(Logic.Converters.TrimmingConverter))]
             public string Market { get; set; }
+
             public Volume Volume { get; set; }
             public decimal Rise { get; set; }
             public decimal Drop { get; set; }

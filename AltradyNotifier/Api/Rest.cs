@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace AltradyNotifier.Api
 {
+    /// <summary>
+    /// Documentation of API: https://cryptobasescanner.docs.apiary.io/
+    /// </summary>
     public class Rest
     {
         private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
@@ -15,17 +18,19 @@ namespace AltradyNotifier.Api
         private readonly Entities.Configuration.Global _config;
         private readonly CancellationToken _token;
 
+        private readonly string _baseUrl;
         private int _fallBackMultiplier;
-        
+
         public Rest(Entities.Configuration.Global config, CancellationToken token)
         {
             _config = config;
             _token = token;
 
+            _baseUrl = "https://api.cryptobasescanner.com/v1"; 
             _fallBackMultiplier = 1;
         }
 
-        public async Task<object> GetBasesAsync(string algorithm = null)
+        public async Task<object> GetBasesAsync(string algorithm)
         {
             string endpoint = "/bases";
 
@@ -34,7 +39,7 @@ namespace AltradyNotifier.Api
             if (string.IsNullOrEmpty(algorithm))
                 param.Add(("algorithm", algorithm));
 
-            return await GetDataAsync(endpoint, null);
+            return await GetDataAsync(endpoint, param);
         }
 
         public async Task<object> GetMarketsAsync(string algorithm, string exchangeCode)
@@ -68,25 +73,24 @@ namespace AltradyNotifier.Api
 
             try
             {
-                string apiUrl = "https://api.cryptobasescanner.com/v1";
-
                 // Create URL
-                string requestUri = $"{apiUrl}{endpoint}?api_key={_config.Altrady.ApiKey}";
+                string requestUri = $"{_baseUrl}{endpoint}?api_key={_config.Altrady.ApiKey}";
 
                 if (param != null)
-                    requestUri += string.Join(string.Empty, param.Select(x => $"&{x.key}={x.value}")); ;
+                    requestUri += string.Join(string.Empty, param.Select(x => $"&{x.key}={x.value}"));
 
-                // Create request with headers
+                // Create request
                 var request = new HttpRequestMessage
                 {
                     Method = HttpMethod.Get,
                     RequestUri = new Uri(requestUri)
                 };
 
-                // Send Request
+                // Send request
                 using var client = new HttpClient();
 
                 var response = await client.SendAsync(request, _token);
+
                 if (response.IsSuccessStatusCode)
                 {
                     _fallBackMultiplier = 1;
@@ -100,7 +104,10 @@ namespace AltradyNotifier.Api
                         _fallBackMultiplier *= 2;
                 }
             }
-            catch (TaskCanceledException) { throw; }
+            catch (TaskCanceledException) 
+            { 
+                throw; 
+            }
             catch (Exception ex)
             {
                 Log.Error(ex);

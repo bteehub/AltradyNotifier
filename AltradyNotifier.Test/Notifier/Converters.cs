@@ -17,6 +17,7 @@ namespace AltradyNotifier.Test
                 LastName = "   Wonderland   "
             };
             aliceJson = JsonConvert.SerializeObject(alice);
+
             Assert.DoesNotContain(aliceJson, x => char.IsWhiteSpace(x));
 
 
@@ -26,6 +27,7 @@ namespace AltradyNotifier.Test
                 LastName = "   Wonderland   "
             };
             aliceJson = JsonConvert.SerializeObject(alice);
+
             Assert.Contains(aliceJson, x => char.IsWhiteSpace(x));
         }
 
