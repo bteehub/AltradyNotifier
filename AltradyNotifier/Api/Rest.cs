@@ -30,7 +30,7 @@ namespace AltradyNotifier.Api
             _fallBackMultiplier = 1;
         }
 
-        public async Task<object> GetBasesAsync(string algorithm = null)
+        public async Task<object> GetBasesAsync(string algorithm)
         {
             string endpoint = "/bases";
 
@@ -39,7 +39,7 @@ namespace AltradyNotifier.Api
             if (string.IsNullOrEmpty(algorithm))
                 param.Add(("algorithm", algorithm));
 
-            return await GetDataAsync(endpoint, null);
+            return await GetDataAsync(endpoint, param);
         }
 
         public async Task<object> GetMarketsAsync(string algorithm, string exchangeCode)
@@ -77,19 +77,20 @@ namespace AltradyNotifier.Api
                 string requestUri = $"{_baseUrl}{endpoint}?api_key={_config.Altrady.ApiKey}";
 
                 if (param != null)
-                    requestUri += string.Join(string.Empty, param.Select(x => $"&{x.key}={x.value}")); ;
+                    requestUri += string.Join(string.Empty, param.Select(x => $"&{x.key}={x.value}"));
 
-                // Create request with headers
+                // Create request
                 var request = new HttpRequestMessage
                 {
                     Method = HttpMethod.Get,
                     RequestUri = new Uri(requestUri)
                 };
 
-                // Send Request
+                // Send request
                 using var client = new HttpClient();
 
                 var response = await client.SendAsync(request, _token);
+
                 if (response.IsSuccessStatusCode)
                 {
                     _fallBackMultiplier = 1;
