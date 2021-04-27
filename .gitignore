@@ -1,6 +1,9 @@
 ﻿/.vs
 /AltradyNotifier/bin
 /AltradyNotifier/obj
+/AltradyNotifier/Properties/PublishProfiles/linux64.pubxml.user
+/AltradyNotifier/Properties/PublishProfiles/osx64.pubxml.user
+/AltradyNotifier/Properties/PublishProfiles/win64.pubxml.user
 /AltradyNotifier/pub
 /AltradyNotifier/AltradyNotifier.csproj.user
 /AltradyNotifier/AltradyNotifier.Btee.json
