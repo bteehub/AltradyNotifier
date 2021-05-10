@@ -2,12 +2,12 @@
   "CultureInfo": "en-UK",
   "MaxPrecision": "8",
   "Altrady": {
-    "ApiKey": "from your Altrady API account",
+    "ApiKey": "API key from your Altrady account",
     "MaxApiCallsPerHour": "1000"
   },
   "Pushover": {
-    "UserToken": "from your Pushover account",
-    "ApplicationToken": "from your Pushover account application"
+    "UserToken": "User Key from your Pushover account",
+    "ApplicationToken": "API Token / Key from your Pushover account application"
   },
   "Filter": [
     {
@@ -33,7 +33,7 @@
           },
           "Rise": "2",
           "Drop": "-2"
-        }        
+        }
       ]
     },
     {
