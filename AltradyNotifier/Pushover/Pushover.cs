@@ -39,8 +39,8 @@ namespace AltradyNotifier.Pushover
             {
                 token = _token,
                 user = _user,
-                title,
-                message,
+                title = title,
+                message = message,
             };
 
             var request = new HttpRequestMessage
@@ -60,10 +60,8 @@ namespace AltradyNotifier.Pushover
 
                 return ParseSendMessageResponse(response.Headers);
             }
-            else
-            {
-                Log.Debug($"Response successful: {response.IsSuccessStatusCode}, status code: {response.StatusCode}, reason: {response.ReasonPhrase}");
-            }
+            
+            Log.Debug($"Response successful: {response.IsSuccessStatusCode}, status code: {response.StatusCode}, reason: {response.ReasonPhrase}");            
 
             return null;
         }
@@ -87,6 +85,8 @@ namespace AltradyNotifier.Pushover
                 var responseContent = await response.Content.ReadAsStringAsync();
                 return Newtonsoft.Json.JsonConvert.DeserializeObject<Reponse.RateLimit>(responseContent);
             }
+
+            Log.Debug($"Response successful: {response.IsSuccessStatusCode}, status code: {response.StatusCode}, reason: {response.ReasonPhrase}");
 
             return null;
         }
