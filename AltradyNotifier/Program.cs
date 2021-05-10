@@ -23,7 +23,7 @@ namespace AltradyNotifier
             var cultureInfo = new CultureInfo(jsonConfig.CultureInfo);
 
             _pushover = new Pushover.Pushover(jsonConfig.Pushover.UserToken, jsonConfig.Pushover.ApplicationToken);
-            await _pushover.SendMessageAsync($"Status @ {DateTime.Now.ToLongTimePattern(cultureInfo)}", "Program started");
+            await _pushover.SendMessageAsync($"Status @ {DateTime.Now.ToLongTimePattern(cultureInfo)}", "Started");
 
             var cancellationToken = new CancellationTokenSource();
             var task = Task.Run(async () =>
@@ -50,7 +50,7 @@ namespace AltradyNotifier
             cancellationToken.Cancel();
             await Task.WhenAll(task);
 
-            await _pushover.SendMessageAsync($"Status @ {DateTime.Now.ToLongTimePattern(cultureInfo)}", "Program stopped");
+            await _pushover.SendMessageAsync($"Status @ {DateTime.Now.ToLongTimePattern(cultureInfo)}", "Stopped");
             Log.Debug($"Stopped");
         }
 

@@ -57,7 +57,7 @@ namespace AltradyNotifier.Notifier
                 // Market
                 if (ParseMarketString(market.Market).Any())
                 {
-                    foreach ((string baseCurrency, string quoteCurrency) in ParseMarketString(market.Market))
+                    foreach (var (baseCurrency, quoteCurrency) in ParseMarketString(market.Market))
                     {
                         if (string.IsNullOrEmpty(baseCurrency)) // Add f.e. /BTC
                             filteredMarket.AddRange(quickScan.Where(x => string.Equals(x.QuoteCurrency, quoteCurrency, StringComparison.OrdinalIgnoreCase)).ToList());
@@ -90,7 +90,19 @@ namespace AltradyNotifier.Notifier
                 }
 
                 // Rise or drop
-                filteredMarket = filteredMarket.Where(x => x.Rise >= market.Rise || x.Drop <= market.Drop).ToList();
+                if(market.Rise.HasValue || market.Drop.HasValue)
+                {
+                    filteredMarket = filteredMarket
+                        .Where(x => (x.Rise.HasValue && market.Rise.HasValue && x.Rise >= market.Rise) || (x.Drop.HasValue && market.Drop.HasValue && x.Drop <= market.Drop))
+                        .ToList();
+                }
+
+                // Mark fat fingers
+                if(market.FatFinger.HasValue)
+                {
+                    foreach (var m in filteredMarket.Where(x => x.Drop.HasValue && market.FatFinger.HasValue && x.Drop <= market.FatFinger))
+                        m.FatFinger = true;
+                }
 
                 // Add to results
                 results.AddRange(filteredMarket);

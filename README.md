@@ -54,8 +54,9 @@ The program is configured by the *AltradyNotifier.json* file in the main binary 
      * `Volume`:
        * `Currency`: `BTC` or `USD`
        * `Value`: f.e. `1000`
-     * `Rise`: f.e. `2`
-     * `Drop`: f.e. `-2`
+     * `Rise`: f.e. `2` (optional)
+     * `Drop`: f.e. `-2` (optional)
+     * `FatFinger`: f.e. `-10` (optional)
 
 ## Launch
 Start the *AltradyNotifier* executeable on your operating system. You can do this by:
