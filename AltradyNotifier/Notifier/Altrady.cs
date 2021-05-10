@@ -55,15 +55,15 @@ namespace AltradyNotifier.Notifier
                             pushoverMessage.title += $"{(item.FatFinger ? "Fat Finger" : "Quick Scan")} {newItems.Key}'";
                             pushoverMessage.title += $" @ {(item.MarketPrices?.Max(x => x.Time) ?? DateTime.UtcNow).ToLocalTime().ToLongTimePattern(CultureInfoLcl)}";
 
-                            pushoverMessage.message += $"{item.BaseCurrency.ToUpper()}/{item.QuoteCurrency.ToUpper()} @ {item.ExchangeName}";
+                            pushoverMessage.message += $"{item.BaseCurrency.ToUpperInvariant()}/{item.QuoteCurrency.ToUpperInvariant()} @ {item.ExchangeName}";
 
                             if (item.Rise.HasValue && item.Rise > 0)
                                 pushoverMessage.message += $"\r\n⇗ {item.Rise.Value.Format(CultureInfoLcl, 1)}%";
                             if (item.Drop.HasValue && item.Drop < 0)
                                 pushoverMessage.message += $"\r\n⇘ {item.Drop.Value.Format(CultureInfoLcl, 1)}%";
 
-                            pushoverMessage.message += $"\r\nLast price: {item.LastPrice.Format(CultureInfoLcl, CalculatePrecision(item.LastPrice))}";
-                            pushoverMessage.message += $"\r\nVolume: $ {item.UsdVolume.Format(CultureInfoLcl, 0)} | ₿ {item.BtcVolume.Format(CultureInfoLcl, 2)}";
+                            pushoverMessage.message += $"\r\nLast price: {item.QuoteCurrency.ToUnicodeSymbol()} {item.LastPrice.Format(CultureInfoLcl, CalculatePrecision(item.LastPrice))}";
+                            pushoverMessage.message += $"\r\nVolume: {"USD".ToUnicodeSymbol()} {item.UsdVolume.Format(CultureInfoLcl, 0)} | {"BTC".ToUnicodeSymbol()} {item.BtcVolume.Format(CultureInfoLcl, 2)}";
 
                             Log.Debug($"Sending notification | Title: {pushoverMessage.title} | Message: {pushoverMessage.message}");
                             await _pushover.SendMessageAsync(pushoverMessage);
