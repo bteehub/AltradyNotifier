@@ -52,9 +52,9 @@ namespace AltradyNotifier.Entities
             public string Market { get; set; }
 
             public Volume Volume { get; set; }
-            public decimal Rise { get; set; }
-            public decimal Drop { get; set; }
-
+            public decimal? Rise { get; set; }
+            public decimal? Drop { get; set; }
+            public decimal? FatFinger { get; set; }
         }
 
         public class Volume

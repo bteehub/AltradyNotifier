@@ -94,6 +94,7 @@ namespace AltradyNotifier.Api
                 if (response.IsSuccessStatusCode)
                 {
                     _fallBackMultiplier = 1;
+
                     return await response.Content.ReadAsStringAsync();
                 }
                 else
@@ -121,7 +122,7 @@ namespace AltradyNotifier.Api
             double maxApiCallsPerMilliSecond = _config.Altrady.MaxApiCallsPerHour / 60d / 60d / 1000d;
 
             int apiDelay = (int)(1d / maxApiCallsPerMilliSecond);
-            apiDelay += new Random().Next(251, 499); // Add some additional delay
+            apiDelay += new Random().Next(101, 241); // Add some additional delay
 
             _fallBackMultiplier = Math.Min(_fallBackMultiplier, int.MaxValue / apiDelay); // prevent int overflow on next line
 
