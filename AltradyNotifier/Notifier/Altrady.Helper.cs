@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using AltradyNotifier.Logic;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AltradyNotifier.Notifier
@@ -38,6 +40,30 @@ namespace AltradyNotifier.Notifier
                 .ToDictionary(k => k.Key, v => v.OrderByDescending(_ => _.MarketPrices.Max(_ => _.Time)).First())
                 .Select(x => x.Value)
                 .ToList();
+        }
+
+        private (string title, string message) CreatePushoverMessage(Entities.Altrady.QuickScanEndpoint.Market marketItem, int timeframe)
+        {
+
+            (string title, string message) pushoverMessage = default;
+
+            // Titel
+            pushoverMessage.title += $"{(marketItem.FatFinger ? "Fat Finger" : "Quick Scan")} {timeframe}'";
+            pushoverMessage.title += $" @ {(marketItem.MarketPrices?.Max(x => x.Time) ?? DateTime.UtcNow).ToLocalTime().ToLongTimePattern(CultureInfoLcl)}";
+
+            // Message
+            pushoverMessage.message += $"{marketItem.BaseCurrency.ToUpperInvariant()}/{marketItem.QuoteCurrency.ToUpperInvariant()} @ {marketItem.ExchangeName}";
+
+            if (marketItem.Rise.HasValue && marketItem.Rise > 0)
+                pushoverMessage.message += $"\r\n⇗ {marketItem.Rise.Value.Format(CultureInfoLcl, 1)}%";
+
+            if (marketItem.Drop.HasValue && marketItem.Drop < 0)
+                pushoverMessage.message += $"\r\n⇘ {marketItem.Drop.Value.Format(CultureInfoLcl, 1)}%";
+
+            pushoverMessage.message += $"\r\nLast price: {marketItem.QuoteCurrency.ToUnicodeSymbol()} {marketItem.LastPrice.Format(CultureInfoLcl, CalculatePrecision(marketItem.LastPrice))}";
+            pushoverMessage.message += $"\r\nVolume: {"USD".ToUnicodeSymbol()} {marketItem.UsdVolume.Format(CultureInfoLcl, 0)} | {"BTC".ToUnicodeSymbol()} {marketItem.BtcVolume.Format(CultureInfoLcl, 2)}";
+
+            return pushoverMessage;
         }
     }
 }
