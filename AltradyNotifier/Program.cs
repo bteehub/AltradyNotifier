@@ -1,5 +1,4 @@
 using AltradyNotifier.Logic;
-using Newtonsoft.Json;
 using System;
 using System.Globalization;
 using System.Threading;
@@ -19,7 +18,7 @@ namespace AltradyNotifier
 
             Log.Debug($"Started");
 
-            var jsonConfig = JsonConvert.DeserializeObject<Entities.Configuration.Global>(System.IO.File.ReadAllText($"{nameof(AltradyNotifier)}.json"));
+            var jsonConfig = await Configuration.GetConfigurationAsync();
             var cultureInfo = new CultureInfo(jsonConfig.CultureInfo);
 
             _pushover = new Pushover.Pushover(jsonConfig.Pushover.UserToken, jsonConfig.Pushover.ApplicationToken);
@@ -62,7 +61,7 @@ namespace AltradyNotifier
             Log.Fatal((Exception)e.ExceptionObject);
 
             if (_pushover != null)
-                _ = _pushover.SendMessageAsync($"Exception occured @ {DateTime.Now:HH:mm}", $"{nameof(AltradyNotifier)} crashed, an unhandled exception occured");
+                _ = _pushover.SendMessageAsync($"Exception occured", $"{nameof(AltradyNotifier)} crashed, an unhandled exception occured");
         }
     }
 }

@@ -47,7 +47,7 @@ namespace AltradyNotifier.Notifier
 
             (string title, string message) pushoverMessage = default;
 
-            // Titel
+            // Title
             pushoverMessage.title += $"{(marketItem.FatFinger ? "Fat Finger" : "Quick Scan")} {timeframe}'";
             pushoverMessage.title += $" @ {(marketItem.MarketPrices?.Max(x => x.Time) ?? DateTime.UtcNow).ToLocalTime().ToLongTimePattern(CultureInfoLcl)}";
 
